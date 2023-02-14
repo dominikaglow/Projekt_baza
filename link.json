@@ -1,0 +1,42 @@
+[
+    {
+        "id_actor": "0",
+        "id_movie": "0"
+    },
+    {
+        "id_actor": "6",
+        "id_movie": "2"
+    },
+    {
+        "id_actor": "0",
+        "id_movie": "2"
+    },
+    {
+        "id_actor": "0",
+        "id_movie": "5"
+    },
+    {
+        "id_actor": "1",
+        "id_movie": "5"
+    },
+    {
+        "id_actor": "2",
+        "id_movie": "7"
+    },
+    {
+        "id_actor": "3",
+        "id_movie": "6"
+    },
+    {
+        "id_actor": "4",
+        "id_movie": "6"
+    },
+    {
+        "id_actor": "5",
+        "id_movie": "6"
+    },
+    {
+        "id_actor": "1",
+        "id_movie": "1"
+    }
+]
