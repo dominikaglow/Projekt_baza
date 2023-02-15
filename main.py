@@ -15,13 +15,12 @@ class Window:
     def __init__(self, master):
         super().__init__()
 
-        # definiowanie nazw plikow
+        # defining files names
         self.FILEMOVIE = 'movie.json'
         self.FILEACTOR = 'actor.json'
         self.FILELINK = 'link.json'
 
         self.master = master
-        # create PhotoImage object
         self.photo_m = tk.PhotoImage(file='tape_16.png')
         self.photo_a = tk.PhotoImage(file='actor_16.png')
         self.photo_add = tk.PhotoImage(file='add.png')
@@ -31,19 +30,16 @@ class Window:
         self.photo_exit = tk.PhotoImage(file='exit.png')
         self.photo_delete_a = tk.PhotoImage(file='delete_a.png')
         self.photo_add_a = tk.PhotoImage(file='add_a.png')
-        # lista movies, actor, link
+        # lists movies, actor, link
         self.my_data_list_m = []
         self.my_data_list_ma = []
         self.my_data_list_lnk = []
-        # StringVar() holds a string data where we can set text value and can retrieve it. Also, we can pass this
-        # variable to textvariable parameter for a widget like Entry. The widget will automatically get updated with
-        # the new value whenever the value of the StringVar() variable changes. id dla movie
+        # id movie
         self.idV = tk.StringVar()
-        # id dla actor
+        # id actor
         self.idVa = tk.StringVar()
 
-        # zakladki
-        # create a Notebook widget
+        # notebooks
         self.notebook = ttk.Notebook(self.master)
         self.notebook.grid(row=0, column=0, columnspan=5, sticky='nsew')
 
@@ -57,8 +53,7 @@ class Window:
         # add frames to notebook
         self.notebook.add(self.movie_frame, text='MOVIES', image=self.photo_m, compound=tk.LEFT)
         self.notebook.add(self.actor_frame, text='ACTORS', image=self.photo_a, compound=tk.LEFT)
-        # przy zmianie zakladki wywolywana jest funkcja switch_tab
-        # virtual event
+        # switch_tab is called when the a tab is changed
         self.notebook.bind('<<NotebookTabChanged>>', self.switch_tab)
 
         self.add_movie_control(self.movie_frame)
@@ -67,11 +62,9 @@ class Window:
         self.frame_btn = tk.Frame(self.master)
         self.frame_btn.grid(row=1, column=0, sticky='nsew')
         for i in range(5):
-            # The columnconfigure() method configures the column index of a grid.
-            # The weight determines how wide the column will occupy, which is relative to other columns.
             self.frame_btn.columnconfigure(i, weight=1)
 
-        self.frame_btn.rowconfigure(0, weight=1)  # column where the widget is
+        self.frame_btn.rowconfigure(0, weight=1)
 
         self.btnAdd = tk.Button(self.frame_btn, image=self.photo_add, borderwidth=0, padx=20, pady=10, command=self.add_entry)
         self.btnAdd.grid(row=1, column=0, padx=20, pady=10)
@@ -92,7 +85,6 @@ class Window:
         self.load_json_from_file(Tab_Typ.MOVIE)
         self.load_trv_with_json(Tab_Typ.MOVIE, self.trv)
 
-        # dodane
         moja = self.generate_next_id(Tab_Typ.MOVIE)
         self.idV.set(moja)
 
@@ -100,7 +92,6 @@ class Window:
         self.frame_content = tk.Frame(m_frame)
 
         self.frame_content.grid(row=0, column=0, rowspan=5, columnspan=5)
-        # The relief style of a widget refers to certain simulated 3-D effects around the outside of the widget.
         label_0 = tk.Label(self.frame_content, anchor="w", width=24, height=1, relief="ridge",
                            text="Id").grid(row=0, column=0, sticky=tk.W + tk.E)
 
@@ -152,7 +143,6 @@ class Window:
         verscrlbar.grid(row=0, column=5, sticky=tk.NS)
         self.trv.configure(xscrollcommand=verscrlbar.set)
 
-        # id, nazwa, rezyser, dlugosc, rodzaj, rok
         self.trv.heading(1, text="Id", anchor="center")
         self.trv.heading(2, text="Title", anchor="center")
         self.trv.heading(3, text="Director", anchor="center")
@@ -167,7 +157,7 @@ class Window:
         self.trv.column("#5", anchor=tk.CENTER, width=180, stretch=False)
         self.trv.column("#6", anchor=tk.CENTER, width=80, stretch=False)
 
-        # kolorowanie wierszy: nieparzyste - niebieski kolor, parzyste - bialy
+        # nieparzyste - niebieski kolor, parzyste - bialy
         self.trv.tag_configure('oddrow', background="white")
         self.trv.tag_configure('evenrow', background="lightblue")
         self.trv.bind("<ButtonRelease>", lambda event: self.MouseButtonUpCallBack(event, "movietree"))
@@ -240,7 +230,6 @@ class Window:
         self.Btn_ma.grid(row=0, column=3)
         self.Btn_md = tk.Button(self.frame_movies_add, image=self.photo_delete_a, borderwidth=0, padx=18, pady=10, command=self.delete_link)
         self.Btn_md.grid(row=1, column=0)
-        # widok po otwarciu, buttons sa enabled, dopiero po kliknieciu w aktora zmieniaja stan
         self.Btn_ma["state"] = tk.DISABLED
         self.Btn_md["state"] = tk.DISABLED
 
@@ -251,7 +240,7 @@ class Window:
 
         self.trvm.column("#1", anchor="w", width=180, stretch=True)
         self.trvm.column("#2", anchor="w", width=180, stretch=False)
-        # width=0 czyli kolumna jest ukryta
+        # width=0 means that the column is "hidden"
         self.trvm.column("#3", anchor="w", width=0, stretch=False)
         self.trvm.column("#4", anchor="w", width=0, stretch=False)
 
@@ -266,17 +255,15 @@ class Window:
 
     def add_link(self):
         list = []
-        # wybrany wiersz, czyli ktry film zostal wybrany
+        # which film is selected
         ind = self.m_combo.current()
         if ind > -1:
-            # recid aktora
             id_a = self.idVa.get()
             id_m = self.my_data_list_m[ind]["id"]
-            # jesli juz istnieje powiazanie aktor -> film to zwroc blad
+            # if the link exists show messagebox
             if self.check_if_link_exist(id_a,id_m) == True:
                 messagebox.showinfo("showinfo", self.my_data_list_m[ind]["title"] + " has been already added for this actor!")
                 return
-            # wstawianie do tabeli i do pliku
             list.append(self.idVa.get())
             itm = self.my_data_list_m[ind]
             list.append(itm["id"])
@@ -285,9 +272,9 @@ class Window:
 
     def delete_link(self):
         selected_item = self.trvm.focus()
-        # details - przechowuje dane wybranego wiersza
+        # details - holds data of selected row
         details = self.trvm.item(selected_item)
-        # actor_id oraz movie_id sa "schowane"
+        # actor_id and movie_id are "hidden"
         actor_id = details.get("values")[2]
         movie_id = details.get("values")[3]
         self.delete_item_from_lnk(actor_id, movie_id)
@@ -300,15 +287,14 @@ class Window:
                 if lnk["id_movie"] == str(id_m):
                     self.my_data_list_lnk.remove(lnk)
 
-    # sprawdzanie czy entry jest liczba, jesli tak zwraca true, jesli nie zwraca false
+    # checking if entry is a number if yes return true, if not return false
     def callback(self, P):
-        # P == "" pozwala na usuniecie wszystkich cyfr wpisanych do pola
         if str.isdigit(P) or P == "":
             return True
         else:
             return False
 
-    # tworzenie listy przechowujacej nazwe filmu i rezysera czyli wszystko co pojawia sie w combo boxie
+    # creating list that holds movie title and director(data that appear ina  combobox)
     def get_movies_from_list(self, list):
         lst = []
         for dic_itm in list:
@@ -320,22 +306,20 @@ class Window:
         # 1 - zakladka actors
         ind = self.notebook.index(self.notebook.select())
         if ind == 1:
-            # czytanie filmow w zakladce aktor zeby miec liste wszystkich aktualnych filmow w comboboxie
+            # loading movies in actor tab to have a list of all current movies in combobox
             self.load_json_from_file(Tab_Typ.MOVIE)
             self.load_json_from_file(Tab_Typ.ACTOR)
             self.load_json_from_file(Tab_Typ.LINK)
 
-            # dodane
             moja_a = self.generate_next_id(Tab_Typ.ACTOR)
             self.idVa.set(moja_a)
-            # trva - tabela z aktorami
+            # trva refers to actors
             self.load_trv_with_json(Tab_Typ.ACTOR, self.trva)
             self.m_combo.configure(values=self.get_movies_from_list(self.my_data_list_m))
-            #self.load_trv_with_json(Tab_Typ.LINK, self.trvm)
 
-    # command_type - operacja do wykonania (add, delete, ...)
-    # list - parametry, ktore maja byc wykorzystane w wykonywanej operacji
-    # type - aktor/film/link
+    # command_type - add, delete, ...
+    # list - list of parameters that will be used
+    # type - actor/movie/link
     def process_request(self, command_type, list, type):
         if type == Tab_Typ.MOVIE:
             tree = self.trv
@@ -378,14 +362,12 @@ class Window:
                         if lnk["id_movie"] == str(id_mov):
                             self.my_data_list_lnk.remove(lnk)
                     self.save_json_to_file(Tab_Typ.LINK)
-                    # self.display_movies_for_actor()
                     del self.my_data_list_m[row]
                 elif type == Tab_Typ.ACTOR:
                     id_ac = list[0]
                     for lnk in self.my_data_list_lnk:
                         if lnk["id_actor"] == id_ac:
                             self.my_data_list_lnk.remove(lnk)
-                            # self.delete_item_from_lnk(id_ac, lnk["id_movie"])
                     self.save_json_to_file(Tab_Typ.LINK)
                     self.remove_all_data_from_tree(self.trvm)
                     del self.my_data_list_ma[row]
@@ -395,7 +377,7 @@ class Window:
             self.load_trv_with_json(type, tree)
         elif type == Tab_Typ.LINK:
             self.display_movies_for_actor()
-        # czyszczenie zawartosci entry
+        # clear entry
         self.clear_all_fields()
 
     def add_entry(self):
@@ -453,7 +435,7 @@ class Window:
         self.process_request("_DELETE_", list, type)
         return
 
-    # usuwanie wszystkich danych z entry
+    # removing data from entry
     def clear_all_fields(self):
         ind = self.notebook.index(self.notebook.select())
         if ind == 0:
@@ -472,7 +454,7 @@ class Window:
             self.idVa.set(self.generate_next_id(Tab_Typ.ACTOR))
 
 
-    # odnosi sie do przycisku clear
+    # cancel -> clear button
     def cancel(self):
         self.clear_all_fields()
         self.change_enabled_state('New')
@@ -503,11 +485,8 @@ class Window:
             file = self.FILELINK
         try:
             # The r throws an error if the file does not exist or opens an existing file
-            # without truncating it for reading; the file pointer position at the beginning of the file.
             file_handler = open(file, 'r')
         except IOError:
-            # The w+ creates a new file or truncates(obcinac) an existing file, then opens it for reading
-            # and writing; the file pointer position at the beginning of the file.
             file_handler = open(file, 'w+')
 
         try:
@@ -601,24 +580,24 @@ class Window:
         cursel = tree.selection()
         if cursel:
             currentRowIndex = tree.selection()[0]
-            # lastTuple przechowuje wartosci dla aktora/filmu o currentRowIndex
+            # lastTuple holds values for actor/movie with currentRowIndex
             lastTuple = (tree.item(currentRowIndex, 'values'))
             self.load_edit_field_with_row_data(lastTuple, tab)
-            # zmiana stanu buttonow
+            # change buttons status
             self.change_enabled_state('Edit')
-            #jesli actortree wypelnij tez tree lnk
+            # if actortree -> display data that refers to connection between actors and movies
             if name == "actortree":
                 self.display_movies_for_actor()
 
     def display_movies_for_actor(self):
-        # lista posiadajaca id filmow dla aktora o id idVa
+        # list containing movie ids for actor with idVa
         lst = self.get_dict_for_actor(self.idVa.get())
         self.load_trv_for_actor(self.get_movies_for_actor(lst), self.idVa.get())
 
     def get_movies_for_actor(self, lst):
-        # lista zwierajaca wszystkie dane filmow z lst
+        # list containing all data about movies from lst
         m_list = []
-        # przeszukiwanie listy z wszystkimi filmami w celu znalezienia filmow z listy lst
+        # searching for movies from list lst
         for dic in self.my_data_list_m:
             if dic["id"] in lst:
                 m_list.append(dic)
@@ -637,7 +616,7 @@ class Window:
     def load_trv_with_json(self, which, tree):
         self.remove_all_data_from_tree(tree)
 
-        count = 0  # indeks wiersza
+        count = 0  # row
 
         if which == Tab_Typ.MOVIE:
             for key in self.my_data_list_m:
@@ -672,10 +651,10 @@ class Window:
                                      tags=('oddrow',))
                 count += 1
 
-    # wypelnianie tabeli Movies w zakladce Actors
+    # filling the Movies table in the Actors tab
     def load_trv_for_actor(self, lst, id_a):
         self.remove_all_data_from_tree(self.trvm)
-        count = 0  # indeks wiersza
+        count = 0  # row
         for key in lst:
             title = key["title"]
             director = key["director"]
@@ -704,7 +683,6 @@ class Window:
             self.btnAdd['state'] = tk.DISABLED
             self.Btn_ma["state"] = tk.DISABLED
             self.Btn_md["state"] = tk.DISABLED
-        # New
         else:
             self.btnUpdate['state'] = tk.DISABLED
             self.btnDelete['state'] = tk.DISABLED
@@ -712,7 +690,7 @@ class Window:
             self.Btn_ma["state"] = tk.DISABLED
             self.Btn_md["state"] = tk.DISABLED
 
-# glowne okno
+
 root = tk.Tk()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -722,12 +700,9 @@ x = (screen_width / 2) - (w / 2)
 y = (screen_height / 2) - (h / 2)
 photo = tk.PhotoImage(file='movie_32.png')
 root.title("Movies Project")
-# Sets the titlebar icon for this window based on the named photo images
 root.wm_iconphoto(False, photo)
-# kolor wiersza na ktory klikniemy
+# color of the line you click on
 root.config(bg="gray17")
-#  geometry() method. This method is used to set the dimensions of the Tkinter
-#  window and is used to set the position of the main window on the user’s desktop.
 root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
