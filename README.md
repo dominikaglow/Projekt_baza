@@ -1,7 +1,7 @@
 # Python_project - baza filmów i aktorów
 
 # 1. Opis programu
-Program służy do zarządzania zbiorem danych filmów oraz aktorów. Użytkownik może dodawać nowe dane, usuwać i modyfikować te już istniejące. Program pobiera dane z odpowiedniego pliku, a następnie wyświetla je użytkownikowi. Dzięki skorzystaniu z biblioteki Tkinter możliwe było stworzenie przejrzystego interfejsu graficznego użytkownika.
+Program służy do zarządzania zbiorem danych filmów oraz aktorów. Użytkownik może dodawać nowe dane, usuwać i modyfikować te już istniejące. W przypadku gdy pliki już istnieją program pobiera zawarte w nich dane. Jeśli pliki nie istnieją zostają one utworzone. Program pobiera dane z odpowiedniego pliku, a następnie wyświetla je użytkownikowi. Dzięki skorzystaniu z biblioteki Tkinter możliwe było stworzenie przejrzystego interfejsu graficznego użytkownika.
 
 Dane przechowywane są w 3 plikach. 
 - Plik actor.json przechowuje dane dotyczące aktorów. Przechowywane dane to: id, imię, nazwisko, data urodzenia. 
